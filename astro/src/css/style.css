@@ -476,3 +476,18 @@ foreignObject {
   stroke: #94a3b8 !important;
   fill: #1e293b !important;
 }
+
+/* When an <li> contains block-level children (e.g. a <p> wrapping text because
+   the list is "loose" with a code block inside the item), `list-style-position:
+   inside` forces the marker onto its own line because an inline marker can't sit
+   beside a block element. Switch those items to `outside` so the marker aligns
+   with the first line of text. */
+.prose ul > li:has(> p),
+.prose ol > li:has(> p) {
+  list-style-position: outside;
+  margin-left: 1.25em;
+}
+.prose ul > li:has(> p) > p:first-child,
+.prose ol > li:has(> p) > p:first-child {
+  margin-top: 0;
+}
