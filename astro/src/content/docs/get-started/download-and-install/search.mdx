@@ -16,7 +16,9 @@ By default, FusionAuth provides a basic database search to find Users or Entitie
 
 ![Database search](../../../../../public/img/docs/get-started/download-and-install/search/basicSearch.webp)
 
-Using Elasticsearch or OpenSearch as the FA search provider gives users more powerful features, like:
+As well as being used in the FA web interface, search is also available in the API.
+
+Switching to Elasticsearch or OpenSearch as the FA search provider gives users more powerful features, like:
 
 - Elasticsearch query strings or JSON queries
 - Searches on custom `user.data` fields
@@ -27,7 +29,7 @@ Elasticsearch may be horizontally scaled using Elasticsearch clustering.
 ![Advanced search](../../../../../public/img/docs/get-started/download-and-install/search/elasticSearch.webp)
 
 <Aside type="note">
-FusionAuth supports Elasticsearch and OpenSearch with the same features. You can choose whichever you prefer. This guide uses "Elasticsearch" as a general term.
+FusionAuth supports Elasticsearch and OpenSearch with the same features. You can choose either brand. This guide uses "Elasticsearch" as a general term.
 </Aside>
 
 You can see which type of search your FA instance uses by browsing to <Breadcrumb>System -> About</Breadcrumb>.
@@ -37,6 +39,14 @@ You can see which type of search your FA instance uses by browsing to <Breadcrum
 <ElasticsearchVersion />
 
 <ElasticsearchRam />
+
+## Should use database search or Elasticsearch?
+
+For queries on simple user fields the database search is incredibly fast, as the search runs on indexed database fields. You should definitely choose database search unless you need to run complex searches, or search the `user.data` field.
+
+Switching to Elasticsearch will require more RAM, more CPU (for continuous indexing even if you aren't currently searching), and disk space of about 1.5 to 2 times your user data in the database expanded into the search index. Elasticsearch synchronizes its index with the user database quickly, but gradually. So there might be small intervals when your search results don't represent the current users in the database.
+
+However, you can switch your search provider type as much as you like. It's as simple as changing your Docker compose file, which is shown in this guide.
 
 ## Download the Package
 
