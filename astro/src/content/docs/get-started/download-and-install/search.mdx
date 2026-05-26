@@ -16,7 +16,7 @@ This page explains how to configure simple database search for FusionAuth, or in
 - [Search with Elasticsearch](/docs/lifecycle/manage-users/search/user-search-with-elasticsearch#an-introduction-to-the-elasticsearch-search-engine)
 - [User API](/docs/apis/users#search-for-users)
 
-By default, FusionAuth provides a basic database search to find Users or Entities by simple fields like username or email address, including the ability to search by partial strings.
+FusionAuth natively provides a basic database search to find Users or Entities by simple fields like username or email address, including the ability to search by partial words.
 
 ![Database search](../../../../../public/img/docs/get-started/download-and-install/search/basicSearch.webp)
 
@@ -28,236 +28,75 @@ Switching to Elasticsearch or OpenSearch as the FA search provider gives users m
 - Searches on custom `user.data` fields
 - Regex, ranges, and complex compound queries
 
-Elasticsearch may be horizontally scaled using Elasticsearch clustering.
-
 ![Advanced search](../../../../../public/img/docs/get-started/download-and-install/search/elasticSearch.webp)
 
 <Aside type="note">
-FusionAuth supports Elasticsearch and OpenSearch with the same features. You can choose either brand. This guide uses "Elasticsearch" as a general term.
+FusionAuth supports Elasticsearch and OpenSearch with the same features. You can choose either brand. This guide uses "Elasticsearch" as a general term for both.
 </Aside>
 
-You can see which type of search your FA instance uses by browsing to <Breadcrumb>System -> About</Breadcrumb>.
+## Should You Use Database Search or Elasticsearch?
 
-![About - Search Engine Type](/img/docs/lifecycle/manage-users/search/about-search-engine-type.png)
+For queries on simple user fields the database search is incredibly fast, as the search runs on indexed database fields. You should definitely choose database search unless you need to run complex searches or search the `user.data` field.
 
-<ElasticsearchVersion />
+Switching to Elasticsearch will require more RAM, more CPU (for continuous indexing even if you aren't currently searching), and disk space of about 1.4 times your user data in the database expanded into the search index (though this can vary significantly). Elasticsearch also takes a little time to synchronize its index with the user database. So there might be small intervals when your search results don't represent the current users in the database.
 
 <ElasticsearchRam />
 
-## Should use database search or Elasticsearch?
+You can switch your search provider freely and as often as you like. It's as simple as changing your Docker compose file, which is shown below.
 
-For queries on simple user fields the database search is incredibly fast, as the search runs on indexed database fields. You should definitely choose database search unless you need to run complex searches, or search the `user.data` field.
+## Configuring Database Search
 
-Switching to Elasticsearch will require more RAM, more CPU (for continuous indexing even if you aren't currently searching), and disk space of about 1.5 to 2 times your user data in the database expanded into the search index. Elasticsearch also takes a little time to synchronize its index with the user database. So there might be small intervals when your search results don't represent the current users in the database.
+The example Docker Compose files for FusionAuth in the [install](/docs/get-started/download-and-install/docker) and [start here](/docs/get-started/start-here/step-1) documentation include Elasticsearch.
 
-You can switch your search provider type freely and as often as you like. It's as simple as changing your Docker compose file, which is shown in this guide.
+To see a minimal Compose example without Elasticsearch, please review the ["light" example](https://github.com/ritza-co/fusionauth-example-docker-compose/blob/main/light/docker-compose.yml) in GitHub.
 
-## Download the Package
+The light example has images only for FA and PostgreSQL. You can see in the `fa` service's `environment` variable the setting to use database search:
 
-Navigate to the [Downloads](/download/) page and find FusionAuth Search package for your target platform.
-
-## Install the Package
-
-<Tabs>
-	<TabItem label="Red Hat">
-
-	To install on a Red Hat system, use the RPM bundle. Execute this command to install the FusionAuth Search RPM (replace `<version>` with
- 	the correct version number):
-
-	```console
-	sudo rpm -i fusionauth-search<version>.rpm
-	```
-	</TabItem>
-	<TabItem label="Debian">
-
-	To install on a Debian system, use the DEB bundle. Execute this command to install the FusionAuth Search DEB (replace `<version>` with
- 	the correct version number):
-
-	```console
-	sudo dpkg -i fusionauth-search<version>.deb
-	```
-
-	</TabItem>
-	<TabItem label="macOS">
-
-	To install on macOS, use the `.zip` bundle. Extract the `fusionauth-search` zip bundle anywhere on the file system. Remember where you extract the file.
-	 This location will be referred to as `FUSIONAUTH_HOME`. We suggest extracting this file to a directory such as `/usr/local/fusionauth`.
-
-	Once the zip bundle has been extracted, the directory structure should look similar to this. If you installed somewhere other the default `FUSIONAUTH_HOME`,
-	 your directory structure will be different, this is only for shown as an example.
-
-	```
-	/usr/local/fusionauth/bin
-	/usr/local/fusionauth/config
-	/usr/local/fusionauth/config/fusionauth.properties
-	/usr/local/fusionauth/fusionauth-search
-	```
-	</TabItem>
-	<TabItem label="macOS with Homebrew">
-
-	Install OpenSearch:
-
-   	```console
-   	brew install opensearch
-   	```
-
-	</TabItem>
-	<TabItem label="Windows (Package)">
-
-	Extract the `fusionauth-search` zip bundle anywhere on the file system. Remember where you extract
-	 the file. This location will be referred to as `FUSIONAUTH_HOME`. We suggest extracting this file to a directory such as `\fusionauth` on Windows.
-
-	Once the zip bundle has been extracted, the directory structure should look similar to this:
-
-	```
-	\fusionauth\bin
-	\fusionauth\config
-	\fusionauth\config\fusionauth.properties
-	\fusionauth\fusionauth-search\
-	```
-	</TabItem>
-	<TabItem label="Windows Service">
-
-	1. Extract the `fusionauth-search` zip bundle anywhere on the file system. Remember where you extract
-	 the file. This location will be referred to as `FUSIONAUTH_HOME`. We suggest extracting this file to a directory such as `\fusionauth` on Windows. Once the zip bundle has been extracted, the directory structure should look similar to this:
-
-	   ```
-	   \fusionauth\bin
-	   \fusionauth\config
-	   \fusionauth\config\fusionauth.properties
-	   \fusionauth\fusionauth-search\
-	   ```
-
-	1. Navigate into `FUSIONAUTH_HOME`:
-
-	   ```powershell
-	   cd \fusionauth\fusionauth-search\elasticsearch\bin
-	   ```
-
-	1. Run the following command to install FusionAuth as a Windows Service:
-
-	   ```powershell
-	   \fusionauth\fusionauth-search\elasticsearch\bin> FusionAuthSearch.exe /install
-	   ```
-	</TabItem>
-</Tabs>
-
-## Configuration
-
-If you will be running more than one search engine service, or the search engine is installed on a separate server than the FusionAuth App service,
-you will need to modify the default configuration in the `fusionauth.properties` file.
-
-If you have installed the Search Engine service on the same server that is running FusionAuth App no further configuration is required.
-
-Each server running the FusionAuth Search service will need to be added to the configuration. To do this, you will need to edit the
-`fusionauth.properties` configuration file. More information about this configuration file is located in the [Configuration Reference](/docs/reference/configuration) section.
-
-The following examples assume that FusionAuth App and FusionAuth Search can communicate either on `localhost` if running on the same
-system, or if running on separate systems that a site local connection exists between both servers. If you require communication between
-FusionAuth App and FusionAuth Search on a public IP address, you will also need to modify the `fusionauth-search.hosts` property
-on the server running FusionAuth Search. The default value will only bind to localhost and site local IP addresses. See the
-[Configuration Reference](/docs/reference/configuration) for more information on configuring the `fusionauth-search.hosts` property.
-
-The following examples also assume the default port as specified by the `fusionauth-search.transport-port` property. If this value has been
-modified, adjust the examples accordingly.
-
-
-### Example Configuration 1
-The following is an example where FusionAuth Search is running on the same server as FusionAuth. This is the default configuration,
-if this is how you have your system configured, no change to `fusionauth.properties` is required.
-
-```ini title="fusionauth.properties"
-fusionauth-search.servers=localhost:9020
-fusionauth-app.search-engine-type=elasticsearch
-fusionauth-app.search-servers=http://localhost:9021
+```yaml
+SEARCH_TYPE: database
 ```
 
+If you already have an instance of FA running Elasticsearch, changing the line above and restarting FA is all you need to do to switch to database search. You can then delete your Elasticsearch instance without affecting FusionAuth.
 
-### Example Configuration 2
-The following is an example where the FusionAuth Search is running on a separate system than the FusionAuth App and the FusionAuth
-Search Engine has an IP Address of `192.168.1.41`.
+If you're running FA directly on your machine without Docker, you can change this environment variable directly.
 
-We'll refer to the server running FusionAuth App as System 1, and the server running FusionAuth Search as System 2.
+## Configuring Elasticsearch
 
-```ini title="fusionauth.properties on System 1"
-fusionauth-search.servers=192.168.1.41:9020
-fusionauth-app.search-engine-type=elasticsearch
-fusionauth-app.search-servers=http://192.168.1.41:9021
+Switching from database search to Elasticsearch reverses the process above. Here is an example [Docker Compose file that uses OpenSearch](https://github.com/ritza-co/fusionauth-example-docker-compose/blob/main/kickstart/docker-compose.yml).
+
+Notice that the `environment` variables are now:
+
+```yaml
+SEARCH_TYPE: elasticsearch
+SEARCH_SERVERS: http://search:9200
 ```
 
-```ini title="fusionauth.properties on System 2"
-fusionauth-search.servers=localhost:9020
-fusionauth-app.search-engine-type=elasticsearch
-fusionauth-app.search-servers=http://localhost:9021
-```
+The new setting, `SEARCH_SERVERS`, tells FA on which URL to call Elasticsearch. The network address here is `search`, which is the name of another container in the Compose file. Both FA and Elasticsearch need to be on the same network, which in this file is called `search_net` and is separate from the database network, called `db_net`. You can use the same network for all components, or your normal host network.
 
-### Example Configuration 3
 <Aside type="note">
-When configuring multiple Elasticsearch nodes, you will need to modify the service discovery settings in the shipped `elasticsearch.yml`.  See [Elasticsearch's Discovery and cluster formation settings](https://www.elastic.co/guide/en/elasticsearch/reference/current/modules-discovery-settings.html) documentation in configuring multiple nodes.
+ES does not query the database directly and gets user data only through FA. However, the data transfer process is [asynchronous since version 1.30.2](https://github.com/FusionAuth/fusionauth-issues/issues/599) and doesn't cause user login delays.
 </Aside>
 
-The following is an example where FusionAuth Search is running on the same server as FusionAuth App, and another server also has
-both the FusionAuth App and the FusionAuth Search installed.
+In addition to the two settings above, you need to have an instance of Elasticsearch running. In this example, OpenSearch is running in Docker on the same machine as FA, but you can run ES anywhere on the network. Please consult the external ES documentation to customize your search server.
 
-We will refer to these systems as System 1 and System 2, where System 1 has an IP address of `192.168.1.41` and System 2 has an IP address
-of `192.168.1.42`.
+After installing Elasticsearch, you must also tell it to index all the data in FA. Do so by browsing to <Breadcrumb>System -> Reindex</Breadcrumb>.
 
+![Database search](../../../../../public/img/docs/get-started/download-and-install/search/basicSearch.webp)
 
-```ini title="fusionauth.properties on System 1"
-fusionauth-search.servers=localhost:9020,192.168.1.42:9020
-fusionauth-app.search-engine-type=elasticsearch
-fusionauth-app.search-servers=http://localhost:9021,http://192.168.1.42:9021
-```
+It's an easy mistake to install Elasticsearch and forget to toggle your `SEARCH_TYPE` variable. You can verify which type of search your FA instance uses by browsing to <Breadcrumb>System -> About</Breadcrumb>.
 
-```ini title="fusionauth.properties on System 2"
-fusionauth-search.servers=localhost:9020,192.168.1.41:9020
-fusionauth-app.search-engine-type=elasticsearch
-fusionauth-app.search-servers=http://localhost:9021,http://192.168.1.41:9021
-```
+![About - Search Engine Type](/img/docs/lifecycle/manage-users/search/about-search-engine-type.png)
 
-## Start FusionAuth Search
+REINDEX
 
-FusionAuth Search Engine should now be ready to run. Use the instructions below to start FusionAuth Search. The search engine should be started
-first before the FusionAuth App service.
+Elasticsearch may be horizontally scaled using Elasticsearch clustering.
 
-<Tabs>
-	<TabItem label="Linux">
+<ElasticsearchVersion />
 
-	```console
-	sudo systemctl start fusionauth-search
-	```
+---
 
-	</TabItem>
-	<TabItem label="macOS">
+FA ES
 
-	```console
-	<FUSIONAUTH_HOME>/fusionauth-search/elasticsearch/bin/elasticsearch -d
-	```
+There are lots of different configurations to check across linux,macos,windows but I think Richard can test Linux and James can test macos and Windows.
 
-	</TabItem>
-	<TabItem label="macOS with Homebrew">
-
-	Start OpenSearch with Homebrew services:
-
-   	```console
-   	brew services start opensearch
-   	```
-	</TabItem>
-	<TabItem label="Windows (Package)">
-
-	```powershell
-	\fusionauth\fusionauth-search\elasticsearch\bin\elasticsearch.bat
-	```
-
-	</TabItem>
-	<TabItem label="Windows Service">
-
-	```powershell
-	net start FusionAuthSearch
-	```
-
-	</TabItem>
-</Tabs>
-
-
-FA
+If there are general improvements to be made we can do that at the same time, e.g. the headings 'example configuration 1' etc don't seem that informative, and I think some of the hard-coded version nubmers in the text might be out of date?
