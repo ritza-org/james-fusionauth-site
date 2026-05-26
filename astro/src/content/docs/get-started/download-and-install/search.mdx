@@ -22,7 +22,7 @@ FusionAuth natively provides a basic database search to find Users or Entities b
 
 As well as being used in the FusionAuth web interface, search is also available in the API.
 
-Switching to Elasticsearch or OpenSearch as the FusionAuth search provider gives users more powerful features, like:
+Switching to Elasticsearch or OpenSearch provides features that the database search does not support, like:
 
 - Elasticsearch query strings or JSON queries
 - Searches on custom `user.data` fields
@@ -58,7 +58,7 @@ SEARCH_TYPE: database
 
 If you already have an instance of FusionAuth running Elasticsearch, changing the line above and restarting FusionAuth is all you need to do to switch to database search. You can then delete your Elasticsearch instance without affecting FusionAuth.
 
-If you're running FusionAuth directly on your machine without Docker, you can change this environment variable directly.
+If you're running FusionAuth directly on your machine without Docker, you can change this environment variable directly on your host machine.
 
 ## Configuring Elasticsearch
 
@@ -71,7 +71,7 @@ SEARCH_TYPE: elasticsearch
 SEARCH_SERVERS: http://search:9200
 ```
 
-The new setting, `SEARCH_SERVERS`, tells FusionAuth on which URL to call Elasticsearch. The network address here is `search`, which is the name of another container in the Compose file. Both FusionAuth and Elasticsearch need to be on the same network, which in this file is called `search_net` and is separate from the database network, called `db_net`. You can use the same network for all components, or your normal host network.
+The new setting, `SEARCH_SERVERS`, tells FusionAuth on which URL to call Elasticsearch. The network address here is `search`, which is the name of the Elasticsearch container in the Compose file. Both FusionAuth and Elasticsearch need to be on the same network, which in this file is called `search_net` and is separate from the database network, called `db_net`. You could also use the same network for all components, or your host network.
 
 <Aside type="note">
 Elasticsearch does not query the database directly and gets user data only through FusionAuth. However, the data transfer process is [asynchronous since version 1.30.2](https://github.com/FusionAuth/fusionauth-issues/issues/599) and doesn't cause user login delays.
@@ -83,7 +83,7 @@ After installing Elasticsearch, you must also tell it to index all the data in F
 
 ![Database search](../../../../../public/img/docs/get-started/download-and-install/search/basicSearch.webp)
 
-It's an easy mistake to install Elasticsearch and forget to toggle your `SEARCH_TYPE` variable. You can verify which type of search your FusionAuth instance uses by browsing to <Breadcrumb>System -> About</Breadcrumb>.
+It's an easy mistake to install Elasticsearch and forget to toggle your `SEARCH_TYPE` variable or forget to restart FusionAuth. You can verify which type of search your FusionAuth instance uses by browsing to <Breadcrumb>System -> About</Breadcrumb>.
 
 ![About - Search Engine Type](/img/docs/lifecycle/manage-users/search/about-search-engine-type.png)
 
@@ -93,6 +93,6 @@ Elasticsearch may be horizontally scaled using Elasticsearch clustering. You can
 SEARCH_SERVERS: http://search:9200,http://search2:9200
 ```
 
-These URLs must point to two Elasticsearch instance in the same cluster. FusionAuth will fail to start if you try to run completely separate Elasticsearch nodes both using FusionAuth.
+These URLs must point to multiple Elasticsearch instances in the same cluster. FusionAuth will fail to start if you try to run completely separate Elasticsearch nodes both using FusionAuth.
 
 <ElasticsearchVersion />
