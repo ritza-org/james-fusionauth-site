@@ -17,21 +17,22 @@ By default, FusionAuth provides a basic database search to find Users or Entitie
 ![Database search](../../../../../public/img/docs/get-started/download-and-install/search/basicSearch.webp)
 
 Using Elasticsearch or OpenSearch as the FA search provider gives users more powerful features, like:
+
 - Elasticsearch query strings or JSON queries
-- Searching on custom `user.data` fields
+- Searches on custom `user.data` fields
 - Regex, ranges, and complex compound queries
 
 Elasticsearch may be horizontally scaled using Elasticsearch clustering.
 
 ![Advanced search](../../../../../public/img/docs/get-started/download-and-install/search/elasticSearch.webp)
 
-You can see which type of search your FA instance uses by browsing to <Breadcrumb>System -> About</Breadcrumb>.
-
-![About - Search Engine Type](/img/docs/lifecycle/manage-users/search/about-search-engine-type.png)
-
 <Aside type="note">
 FusionAuth supports Elasticsearch and OpenSearch with the same features. You can choose whichever you prefer. This guide uses "Elasticsearch" as a general term.
 </Aside>
+
+You can see which type of search your FA instance uses by browsing to <Breadcrumb>System -> About</Breadcrumb>.
+
+![About - Search Engine Type](/img/docs/lifecycle/manage-users/search/about-search-engine-type.png)
 
 <ElasticsearchVersion />
 
