@@ -60,7 +60,7 @@ If you're running FusionAuth directly on your machine without Docker, you can ch
 
 ## Configuring Elasticsearch
 
-Switching from database search to Elasticsearch reverses the process above. Here is an example [Docker Compose file that uses OpenSearch](https://github.com/ritza-co/fusionauth-example-docker-compose/blob/main/kickstart/docker-compose.yml).
+Switching from database search to Elasticsearch or OpenSearch reverses the process above. Here is an example [Docker Compose file that uses OpenSearch](https://github.com/ritza-co/fusionauth-example-docker-compose/blob/main/kickstart/docker-compose.yml). To use Elasticsearch instead, replace the `opensearchproject/opensearch` image with `docker.elastic.co/elasticsearch/elasticsearch` and update the environment variables accordingly.
 
 Notice that the `environment` variables are now:
 
@@ -75,7 +75,7 @@ The new setting, `SEARCH_SERVERS`, tells FusionAuth on which URL to call Elastic
 Elasticsearch does not query the database directly and gets user data only through FusionAuth. However, the data transfer process is [asynchronous since version 1.30.2](https://github.com/FusionAuth/fusionauth-issues/issues/599) and doesn't cause user login delays.
 </Aside>
 
-In addition to the two settings above, you need to have an instance of Elasticsearch running. In this example, OpenSearch is running in Docker on the same machine as FusionAuth, but you can run Elasticsearch anywhere on the network. Please consult the external Elasticsearch documentation to customize your search server.
+In addition to the two settings above, you need to have an instance of Elasticsearch running. In this example, OpenSearch is running in Docker on the same machine as FusionAuth, but you can run Elasticsearch anywhere on the network. If you are not using Docker, refer to the [Elasticsearch installation docs](https://www.elastic.co/docs/deploy-manage/deploy/self-managed/installing-elasticsearch) or the [OpenSearch installation docs](https://docs.opensearch.org/latest/install-and-configure/install-opensearch/index/) for your platform.
 
 After installing Elasticsearch, you must also tell it to index all the data in FusionAuth. Do so by browsing to <Breadcrumb>System -> Reindex</Breadcrumb>.
 
