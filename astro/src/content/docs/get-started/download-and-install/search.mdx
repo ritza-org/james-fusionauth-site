@@ -58,30 +58,30 @@ If you already have an instance of FusionAuth running Elasticsearch, changing th
 
 If you're running FusionAuth directly on your machine without Docker, you can change this environment variable directly on your host machine.
 
-## Configuring Elasticsearch
+## Configuring Elasticsearch or OpenSearch
 
-Switching from database search to Elasticsearch or OpenSearch reverses the process above. Here is an example [Docker Compose file that uses OpenSearch](https://github.com/ritza-co/fusionauth-example-docker-compose/blob/main/kickstart/docker-compose.yml). To use Elasticsearch instead, replace the `opensearchproject/opensearch` image with `docker.elastic.co/elasticsearch/elasticsearch` and update the environment variables accordingly.
+Switching from database search to a search engine reverses the process above. You can use either Elasticsearch or OpenSearch. Here is an example [Docker Compose file that uses OpenSearch](https://github.com/ritza-co/fusionauth-example-docker-compose/blob/main/kickstart/docker-compose.yml). If you prefer Elasticsearch, replace the `opensearchproject/opensearch` image with `docker.elastic.co/elasticsearch/elasticsearch` and update the environment variables accordingly.
 
-Notice that the `environment` variables are now:
+Whichever engine you choose, the FusionAuth environment variables are the same. Note that `SEARCH_TYPE` uses the value `elasticsearch` for both Elasticsearch and OpenSearch, as FusionAuth uses a single setting for both engines:
 
 ```yaml
 SEARCH_TYPE: elasticsearch
 SEARCH_SERVERS: http://search:9200
 ```
 
-The new setting, `SEARCH_SERVERS`, tells FusionAuth on which URL to call Elasticsearch. The network address here is `search`, which is the name of the Elasticsearch container in the Compose file. Both FusionAuth and Elasticsearch need to be on the same network, which in this file is called `search_net` and is separate from the database network, called `db_net`. You could also use the same network for all components, or your host network.
+The `SEARCH_SERVERS` setting tells FusionAuth on which URL to call the search engine. The network address here is `search`, which is the name of the search container in the Compose file. Both FusionAuth and the search engine need to be on the same network, which in this file is called `search_net` and is separate from the database network, called `db_net`. You could also use the same network for all components, or your host network.
 
 <Aside type="note">
-Elasticsearch does not query the database directly and gets user data only through FusionAuth. However, the data transfer process is [asynchronous since version 1.30.2](https://github.com/FusionAuth/fusionauth-issues/issues/599) and doesn't cause user login delays.
+The search engine does not query the database directly and gets user data only through FusionAuth. However, the data transfer process is [asynchronous since version 1.30.2](https://github.com/FusionAuth/fusionauth-issues/issues/599) and doesn't cause user login delays.
 </Aside>
 
-In addition to the two settings above, you need to have an instance of Elasticsearch running. In this example, OpenSearch is running in Docker on the same machine as FusionAuth, but you can run Elasticsearch anywhere on the network. If you are not using Docker, refer to the [Elasticsearch installation docs](https://www.elastic.co/docs/deploy-manage/deploy/self-managed/installing-elasticsearch) or the [OpenSearch installation docs](https://docs.opensearch.org/latest/install-and-configure/install-opensearch/index/) for your platform.
+In addition to the two settings above, you need to have a search engine instance running. You can run it in Docker on the same machine as FusionAuth, or anywhere else on the network. If you are not using Docker, refer to the [Elasticsearch installation docs](https://www.elastic.co/docs/deploy-manage/deploy/self-managed/installing-elasticsearch) or the [OpenSearch installation docs](https://docs.opensearch.org/latest/install-and-configure/install-opensearch/index/) for your platform.
 
-After installing Elasticsearch, you must also tell it to index all the data in FusionAuth. Do so by browsing to <Breadcrumb>System -> Reindex</Breadcrumb>.
+After installing your search engine, you must also tell it to index all the data in FusionAuth. Do so by browsing to <Breadcrumb>System -> Reindex</Breadcrumb>.
 
 ![The FusionAuth admin UI showing the Reindex page under System.](/img/docs/get-started/download-and-install/search/reindex.webp)
 
-It's an easy mistake to install Elasticsearch and forget to toggle your `SEARCH_TYPE` variable or forget to restart FusionAuth. You can verify which type of search your FusionAuth instance uses by browsing to <Breadcrumb>System -> About</Breadcrumb>.
+It's an easy mistake to install a search engine and forget to toggle your `SEARCH_TYPE` variable or forget to restart FusionAuth. You can verify which type of search your FusionAuth instance uses by browsing to <Breadcrumb>System -> About</Breadcrumb>.
 
 ![The FusionAuth admin UI showing the About page with the search engine type displayed.](/img/docs/lifecycle/manage-users/search/about-search-engine-type.png)
 
