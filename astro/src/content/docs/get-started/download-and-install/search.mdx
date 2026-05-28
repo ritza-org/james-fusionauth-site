@@ -16,7 +16,7 @@ This page explains how to configure simple database search for FusionAuth, or in
 
 FusionAuth natively provides a basic database search to find Users or Entities by simple fields like username or email address, including the ability to search by partial words.
 
-![The FusionAuth admin UI showing the basic database search for users.](/img/docs/get-started/download-and-install/search/basicSearch.webp)
+![The FusionAuth admin UI showing the basic database search for users.](/img/docs/get-started/download-and-install/search/basic-search.png)
 
 As well as being used in the FusionAuth web interface, search is also available in the API.
 
@@ -26,7 +26,7 @@ Switching to Elasticsearch or OpenSearch provides features that the database sea
 * Searches on custom `user.data` fields
 * Regex, ranges, and complex compound queries
 
-![The FusionAuth admin UI showing the advanced Elasticsearch search for users.](/img/docs/get-started/download-and-install/search/elasticSearch.webp)
+![The FusionAuth admin UI showing the advanced Elasticsearch search for users.](/img/docs/get-started/download-and-install/search/elastic-search.png)
 
 <Aside type="note">
 FusionAuth supports Elasticsearch and OpenSearch with the same features. You can choose either brand. This guide uses "Elasticsearch" as a general term for both.
@@ -79,11 +79,11 @@ In addition to the two settings above, you need to have a search engine instance
 
 After installing your search engine, you must also tell it to index all the data in FusionAuth. Do so by browsing to <Breadcrumb>System -> Reindex</Breadcrumb>.
 
-![The FusionAuth admin UI showing the Reindex page under System.](/img/docs/get-started/download-and-install/search/reindex.webp)
+![The FusionAuth admin UI showing the Reindex page under System.](/img/docs/get-started/download-and-install/search/reindex.png)
 
 It's an easy mistake to install a search engine and forget to toggle your `SEARCH_TYPE` variable or forget to restart FusionAuth. You can verify which type of search your FusionAuth instance uses by browsing to <Breadcrumb>System -> About</Breadcrumb>.
 
-![The FusionAuth admin UI showing the About page with the search engine type displayed.](/img/docs/lifecycle/manage-users/search/about-search-engine-type.png)
+![The FusionAuth admin UI showing the About page with the search engine type displayed.](/img/docs/get-started/download-and-install/search/about-search-engine-type.png)
 
 Elasticsearch may be horizontally scaled using Elasticsearch clustering. You can use multiple comma-separated search URLs with FusionAuth, as shown below:
 
