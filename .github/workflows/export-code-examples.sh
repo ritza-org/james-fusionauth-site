@@ -23,7 +23,7 @@ for LOCAL_REPOSITORY_PATH in astro/src/code-example-repositories/*/; do
 			exit 1
 		fi
 
-		read -r PARTIAL_REMOTE_URL BRANCH < "$URL_FILE"
+		read -r PARTIAL_REMOTE_URL BRANCH < "$URL_FILE" || true
 		REMOTE_URL="https://x-access-token:${GITHUB_TOKEN}@${PARTIAL_REMOTE_URL}"
 
 		echo "Publishing $REPOSITORY_NAME to $PARTIAL_REMOTE_URL ($BRANCH)"
