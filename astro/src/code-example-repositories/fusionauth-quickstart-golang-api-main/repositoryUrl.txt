@@ -1,1 +1,1 @@
-github.com/ritza-org/fusionauth-quickstart-golang-api
+github.com/ritza-org/fusionauth-quickstart-golang-api main
