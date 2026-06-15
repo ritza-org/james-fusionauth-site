@@ -1,4 +1,5 @@
 // :snippet-start: package-imports
+// test code change
 package main
 
 import (
