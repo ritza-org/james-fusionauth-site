@@ -1,1 +1,1 @@
-github.com/ritza-org/fusionauth-quickstart-javascript-nextjs-web
+github.com/ritza-org/fusionauth-quickstart-javascript-nextjs-web main

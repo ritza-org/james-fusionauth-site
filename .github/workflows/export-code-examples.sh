@@ -23,10 +23,10 @@ for LOCAL_REPOSITORY_PATH in astro/src/code-example-repositories/*/; do
 			exit 1
 		fi
 
-		PARTIAL_REMOTE_URL=$(cat "$URL_FILE" | tr -d '[:space:]')
+		read -r PARTIAL_REMOTE_URL BRANCH < "$URL_FILE"
 		REMOTE_URL="https://x-access-token:${GITHUB_TOKEN}@${PARTIAL_REMOTE_URL}"
 
-		echo "Publishing $REPOSITORY_NAME"
+		echo "Publishing $REPOSITORY_NAME to $PARTIAL_REMOTE_URL ($BRANCH)"
 
 		# Process local files with Bluehawk to strip annotations but not generate snippets
 		ABS_REPOSITORY_PATH="$(pwd)/$LOCAL_REPOSITORY_PATH"
@@ -47,8 +47,8 @@ for LOCAL_REPOSITORY_PATH in astro/src/code-example-repositories/*/; do
 		git config user.email "actions@github.com"
 		git config user.name "GitHub Actions"
 
-		# Checkout main branch, crash if it doesn't exist
-		git checkout main || exit 1
+		# Checkout target branch, crash if it doesn't exist
+		git checkout "$BRANCH" || exit 1
 
 		# Replace the entire working tree with the processed files to mirror exactly
 		git rm -rf .
@@ -59,7 +59,7 @@ for LOCAL_REPOSITORY_PATH in astro/src/code-example-repositories/*/; do
 		git add -A
 		if ! git diff --cached --quiet; then
 			git commit -m "chore: update from fusionauth-site ${DOCUMENTATION_COMMIT_HASH}"
-			git push origin main
+			git push origin "$BRANCH"
 		fi
 
 		# Remove temporary folders
