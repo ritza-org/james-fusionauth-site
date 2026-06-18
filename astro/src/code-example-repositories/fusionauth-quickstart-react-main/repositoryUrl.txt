@@ -1,1 +1,1 @@
-github.com/FusionAuth/fusionauth-quickstart-react.git
+github.com/ritza-org/fusionauth-quickstart-javascript-react-web
