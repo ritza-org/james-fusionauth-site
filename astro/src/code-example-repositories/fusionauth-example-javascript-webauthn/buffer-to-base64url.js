@@ -7,6 +7,6 @@ function bufferToBase64URL(buffer) {
   const base64 = btoa(string);
   return base64.replace(/\+/g, '-').replace(/\//g, '_').replace(/=/g, '');
 }
-// :snippet-end:
+// :snippet-start: orphaned-snippet-no-end
 
 module.exports = { bufferToBase64URL }; // :remove:
