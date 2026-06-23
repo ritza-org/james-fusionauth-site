@@ -10,3 +10,4 @@ function bufferToBase64URL(buffer) {
 // :snippet-end:
 
 module.exports = { bufferToBase64URL }; // :remove:
+
