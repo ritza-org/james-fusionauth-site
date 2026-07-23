@@ -1,1 +1,1 @@
-github.com/FusionAuth/fusionauth-quickstart-java-springboot-api.git
+github.com/ritza-org/fusionauth-quickstart-java-springboot-api.git
