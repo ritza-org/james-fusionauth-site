@@ -1,1 +1,1 @@
-github.com/FusionAuth/fusionauth-quickstart-dotnet-web.git
+github.com/ritza-org/fusionauth-quickstart-dotnet-web.git

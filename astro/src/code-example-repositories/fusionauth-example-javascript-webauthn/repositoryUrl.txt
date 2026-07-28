@@ -1,1 +1,1 @@
-github.com/FusionAuth/fusionauth-example-javascript-webauthn.git
+github.com/ritza-org/fusionauth-example-javascript-webauthn.git
