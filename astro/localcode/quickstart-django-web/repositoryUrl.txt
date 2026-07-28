@@ -1,1 +1,1 @@
-github.com/FusionAuth/fusionauth-quickstart-python-django-web.git
+github.com/ritza-org/fusionauth-quickstart-python-django-web.git
